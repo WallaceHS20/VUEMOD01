@@ -1,64 +1,65 @@
 app.component('product-display', {
-    setup(){
-        const image = ref("./assets/images/t-shirt-blue.png");
-        const changeImage = (variantImage) =>{
-            image.value = variantImage
+    setup() {
+        const stock = 10
+        const inStockComputed = computed(() => {
+            if (stock > 10) {
+                return 'In Stock';
+            }
+            else if (stock <= 10 && stock >= 1) {
+                return 'last 10 products';
+            }
+            else {
+                return 'Out Stock';
+            }
+        })
+
+        const image = ref("./assets/images/t-shirt-blue.png") //inicializado com azul
+        const changeImage = (variant) => {
+            image.value = variant;
         }
 
-        const product_title = 'T-Shirt';
-        const brand = "Marconyu"; const titleWithBrand = computed(()=>{
-            return product_title + " " + brand;
-        });
 
-        const inStock = 15;
-        const inStockComputed = computed(()=>{
-            if(inStock > 10)
-                return "In Stock"
-            else if(inStock <= 10 && inStock > 0 )
-                return "Almost of Stock"
-            else
-                return "Out of Stock"
-        })
-        
         return {
+            title: ref("T-shirt"),
             image,
-            details: ['50% Cotton', '30% polyester', '20% wool'],
-            variants: [
-            {id:1, color:'blue', image: "./assets/images/t-shirt-blue.png"},
-            {id:2, color:'green', image: "./assets/images/t-shirt-green.png"}
-        ],
+            details: ['Poliester', 'Beateful', 'more informations'],
+            variants: [{ id: 1, color: 'blue', image: "./assets/images/t-shirt-blue.png" }, { id: 2, color: 'green', image: "./assets/images/t-shirt-green.png" }],
             changeImage,
-            titleWithBrand,
-            inStockComputed
+            inStockComputed,
+            stock
         }
     },
     template:
-    `<div class="product-display">
+        `
+    <div class="product-display">
         <div class="product-container">
             <div class="product-image">
-                <img :src="image" alt="img_product" srcset="">
+                <img :src="image" alt="">
             </div>
             <div class="product-info">
-                <h1>{{ titleWithBrand }}</h1>
-                <p>{{inStockComputed}}</p>
+                <h1>{{ title }}</h1>
+                <p> {{ inStockComputed }} </p>
                 <ul>
                     <li v-for="detail in details">
-                        {{ detail }}
+                        {{detail}}
                     </li>
                 </ul>
                 <div 
+                class="color-circle"
+                :style="{backgroundColor: variant.color}"
                 v-for="variant in variants" 
                 :key="variant.id"
                 @mouseover="changeImage(variant.image)"
-                class="color-circle"
-                :style="{ backgroundColor: variant.color }">
+                >
                 </div>
                 <button 
-                class="button"
-                :class="{ disabledButton : inStock < 1}"
-                @click="$emit('add-to-cart')"
-                :disabled="inStock < 1">Add To Cart</button>
+                class="button" 
+                :class="{disabledButton : stock < 1 }"
+                @click="$emit('add-to-cart')" 
+                :disabled="stock < 1"
+                >Add to Cart</button>
             </div>
         </div>
-    </div>`
+    </div>
+    `
 })
