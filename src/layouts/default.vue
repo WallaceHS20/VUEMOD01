@@ -1,4 +1,5 @@
 <template>
+  <Alert v-if="alertStore.showAlert"/>
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer">
       <v-list>
@@ -39,6 +40,8 @@
 
 <script setup>
 import { ref } from "vue";
+import Alert from '@/components/Alert.vue'
+import { useAlertStore } from '@/stores/alert'
 
 const drawer = ref(null);
 
@@ -46,6 +49,8 @@ const items = [
   { text: "Home", icon: "mdi-folder", to: "/Home" },
   { text: "About", icon: "mdi-account-multiple", to: "/" },
 ];
+
+const alertStore = useAlertStore();
 
 </script>
 
